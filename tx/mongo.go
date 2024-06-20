@@ -16,8 +16,9 @@ package tx
 
 import (
 	"context"
-	"go.mongodb.org/mongo-driver/bson"
 	"sync"
+
+	"go.mongodb.org/mongo-driver/bson"
 
 	"go.mongodb.org/mongo-driver/mongo"
 )
@@ -62,7 +63,8 @@ func (m *_Mongo) init(ctx context.Context) (err error) {
 			return err
 		}
 		defer sess.EndSession(ctx)
-		_, err = sess.WithTransaction(ctx, func(sessCtx mongo.SessionContext) (interface{}, error) {
+		transCtx := context.Background()
+		_, err = sess.WithTransaction(transCtx, func(sessCtx mongo.SessionContext) (interface{}, error) {
 			return nil, fn(sessCtx)
 		})
 		return err
